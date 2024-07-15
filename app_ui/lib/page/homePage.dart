@@ -1,7 +1,10 @@
+import 'package:app_ui/page/shoppingCartPage.dart';
 import 'package:flutter/material.dart';
 
-import '../component/disherItem.dart';
+import '../component/dishesItem.dart';
 import '../component/dishesTypeItem.dart';
+import '../model/dishes.dart';
+import '../model/dishesType.dart';
 import '../state/dishesTypeItemState.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,7 +19,55 @@ class _HomePageState extends State<HomePage> {
 
   int selectedIndex = 1;
 
-  List<int> item = [1, 2, 4, 5, 6];
+  List<DishesType> item = [
+    DishesType(title: "炒菜", id: 0),
+    DishesType(title: "炒菜", id: 0),
+    DishesType(title: "炒菜", id: 0),
+    DishesType(title: "炒菜", id: 0),
+    DishesType(title: "炒菜", id: 0)
+  ];
+  List<Dishes> dishes = [
+    Dishes(
+        id: 0,
+        title: "番茄炒鸡蛋",
+        image:
+            "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
+    Dishes(
+        id: 0,
+        title: "番茄炒鸡蛋",
+        image:
+            "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
+    Dishes(
+        id: 0,
+        title: "番茄炒鸡蛋",
+        image:
+            "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
+    Dishes(
+        id: 0,
+        title: "番茄炒鸡蛋",
+        image:
+            "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
+    Dishes(
+        id: 0,
+        title: "番茄炒鸡蛋",
+        image:
+            "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
+    Dishes(
+        id: 0,
+        title: "番茄炒鸡蛋",
+        image:
+            "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
+    Dishes(
+        id: 0,
+        title: "番茄炒鸡蛋",
+        image:
+            "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
+    Dishes(
+        id: 0,
+        title: "番茄炒鸡蛋",
+        image:
+            "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
+  ];
 
   void selectedIndexFunction(int index) {
     setState(() {
@@ -27,6 +78,23 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFFE8F5E9),
+        title: TextField(
+          decoration: const InputDecoration(
+            labelText: '查找',
+            prefixIcon: Icon(Icons.search),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xff795548),
+                width: 2.0,
+              ),
+            ),
+          ),
+          onChanged: (value) {},
+          onSubmitted: (value) {},
+        ),
+      ),
       body: Row(
         children: <Widget>[
           Expanded(
@@ -39,8 +107,8 @@ class _HomePageState extends State<HomePage> {
               itemCount: item.length,
               itemBuilder: (context, index) {
                 return DishesTypeItem(
-                  title: item[index].toString(),
-                  index: item[index],
+                  title: item[index].title,
+                  index: index,
                   backFunction: (index) => selectedIndexFunction(index),
                 );
               },
@@ -51,17 +119,29 @@ class _HomePageState extends State<HomePage> {
             child: Container(
                 color: Color(0xFFE8F5E9),
                 child: ListView.builder(
-                    itemCount: 1,
+                    itemCount: dishes.length,
                     itemBuilder: (context, index) {
                       return DishesItem(
-                          title: '番茄炒鸡蛋',
-                          index: 1,
-                          image:
-                              'https://static.binschool.app/images/solidity-basic-v6.jpg');
+                          title: dishes[index].title,
+                          id: dishes[index].id,
+                          image: dishes[index].image);
                     })),
           ),
         ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   mini: true,
+      //   backgroundColor: Color(0xffFFEB3B),
+      //   // elevation: 8.0, // 按钮的海拔（阴影大小）
+      //   // focusElevation: 12.0, // 当按钮获得焦点时的海拔
+      //   // hoverElevation: 8.0, // 当用户悬停在按钮上时的海拔
+      //   onPressed: () {
+      //     navigationBarTypeItemState.key.currentState?.setState(() {
+      //       navigationBarTypeItemState.setIndex(3);
+      //     });
+      //   },
+      //   child: Icon(Icons.shopping_cart),
+      // ),
     );
   }
 }

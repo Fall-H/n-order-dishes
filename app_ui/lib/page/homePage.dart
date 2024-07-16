@@ -1,4 +1,5 @@
 import 'package:app_ui/page/shoppingCartPage.dart';
+import 'package:app_ui/state/stateStream.dart';
 import 'package:flutter/material.dart';
 
 import '../component/dishesItem.dart';
@@ -78,70 +79,99 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFE8F5E9),
-        title: TextField(
-          decoration: const InputDecoration(
-            labelText: '查找',
-            prefixIcon: Icon(Icons.search),
-            border: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xff795548),
-                width: 2.0,
+        appBar: AppBar(
+          backgroundColor: Color(0xFFE8F5E9),
+          title: TextField(
+            decoration: const InputDecoration(
+              labelText: '查找',
+              prefixIcon: Icon(Icons.search),
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xff795548),
+                  width: 2.0,
+                ),
               ),
             ),
+            onChanged: (value) {},
+            onSubmitted: (value) {},
           ),
-          onChanged: (value) {},
-          onSubmitted: (value) {},
         ),
-      ),
-      body: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: ListView.builder(
-              // padding: const EdgeInsets.only(
-              //   top: 5.0,
-              //   bottom: 5.0,
-              // ),
-              itemCount: item.length,
-              itemBuilder: (context, index) {
-                return DishesTypeItem(
-                  title: item[index].title,
-                  index: index,
-                  backFunction: (index) => selectedIndexFunction(index),
-                );
-              },
+        body: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: ListView.builder(
+                // padding: const EdgeInsets.only(
+                //   top: 5.0,
+                //   bottom: 5.0,
+                // ),
+                itemCount: item.length,
+                itemBuilder: (context, index) {
+                  return DishesTypeItem(
+                    title: item[index].title,
+                    index: index,
+                    backFunction: (index) => selectedIndexFunction(index),
+                  );
+                },
+              ),
             ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Container(
-                color: Color(0xFFE8F5E9),
-                child: ListView.builder(
-                    itemCount: dishes.length,
-                    itemBuilder: (context, index) {
-                      return DishesItem(
-                          title: dishes[index].title,
-                          id: dishes[index].id,
-                          image: dishes[index].image);
-                    })),
-          ),
-        ],
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   mini: true,
-      //   backgroundColor: Color(0xffFFEB3B),
-      //   // elevation: 8.0, // 按钮的海拔（阴影大小）
-      //   // focusElevation: 12.0, // 当按钮获得焦点时的海拔
-      //   // hoverElevation: 8.0, // 当用户悬停在按钮上时的海拔
-      //   onPressed: () {
-      //     navigationBarTypeItemState.key.currentState?.setState(() {
-      //       navigationBarTypeItemState.setIndex(3);
-      //     });
-      //   },
-      //   child: Icon(Icons.shopping_cart),
-      // ),
+            Expanded(
+              flex: 3,
+              child: Container(
+                  color: Color(0xFFE8F5E9),
+                  child: ListView.builder(
+                      itemCount: dishes.length,
+                      itemBuilder: (context, index) {
+                        return DishesItem(
+                            title: dishes[index].title,
+                            id: dishes[index].id,
+                            image: dishes[index].image);
+                      })),
+            ),
+          ],
+        ),
+        floatingActionButton: buildFloatingActionButton());
+  }
+
+  Widget buildFloatingActionButton() {
+    return Stack(
+      alignment: Alignment.topRight,
+      children: <Widget>[
+        FloatingActionButton(
+          mini: true,
+          onPressed: () {},
+          child: Icon(Icons.shopping_cart),
+          backgroundColor: Color(0xffFFEB3B), // 选择一个醒目的颜色
+        ),
+        Positioned(
+          right: 0.0,
+          top: 0.0,
+          child: buildBadge(), // 假设标记数字为5
+        )
+      ],
     );
+  }
+
+  Widget buildBadge() {
+    // 使用Container创建一个圆形的标记，显示数字
+    return Container(
+        padding: EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: StreamBuilder(
+          stream: StateStream().shoppingCartStream.stream,
+          initialData: StateStream().shoppingCartCount,
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            return Text(
+              snapshot.data.toString(),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+              ),
+            );
+          },
+        ));
   }
 }

@@ -1,7 +1,7 @@
-import 'package:app_ui/state/shoppingCartState.dart';
 import 'package:flutter/material.dart';
 
 import '../state/dishesTypeItemState.dart';
+import '../state/stateStream.dart';
 
 class DishesItem extends StatefulWidget {
   String title;
@@ -17,7 +17,6 @@ class DishesItem extends StatefulWidget {
 }
 
 class _DishesItemState extends State<DishesItem> {
-  ShoppingCartState shoppingCartState = ShoppingCartState();
 
   String title;
   String image;
@@ -68,9 +67,8 @@ class _DishesItemState extends State<DishesItem> {
               alignment: Alignment.bottomCenter,
               child: InkWell(
                 onTap: () {
-                  shoppingCartState.key.currentState?.setState(() {
-                    shoppingCartState.total++;
-                  });
+                  StateStream().shoppingCartCount++;
+                  StateStream().getShoppingCartStream().sink.add(StateStream().shoppingCartCount);
                 },
                 child: Container(
                     width: 30.0,

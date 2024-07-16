@@ -1,7 +1,6 @@
 import 'package:app_ui/page/homePage.dart';
 import 'package:app_ui/page/profilePage.dart';
 import 'package:app_ui/page/shoppingCartPage.dart';
-import 'package:app_ui/state/shoppingCartState.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -27,11 +26,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  ShoppingCartState shoppingCartState = ShoppingCartState();
-
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
-    const ShoppingCartPage(),
+    // const ShoppingCartPage(),
     const ProfilePage()
   ];
 
@@ -45,19 +42,17 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    ShoppingCartState shoppingCartState = ShoppingCartState();
     return Scaffold(
-      key: shoppingCartState.key,
       appBar: null,
       body: Center(
         child: _widgetOptions.elementAt(selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          _createCustomBottomNavigationBarItem(Icons.home, '菜单', 0, false),
-          _createCustomBottomNavigationBarItem(
-              Icons.shopping_cart, '购物车', 0, true),
-          _createCustomBottomNavigationBarItem(Icons.person, '我的', 2, false),
+          _createCustomBottomNavigationBarItem(Icons.home, '菜单', 0),
+          // _createCustomBottomNavigationBarItem(
+          //     Icons.shopping_cart, '购物车', 1),
+          _createCustomBottomNavigationBarItem(Icons.person, '我的', 2),
         ],
         currentIndex: selectedIndex,
         selectedItemColor: const Color(0xff2e7d32),
@@ -68,30 +63,9 @@ class _MainPageState extends State<MainPage> {
   }
 
   BottomNavigationBarItem _createCustomBottomNavigationBarItem(
-      IconData icon, String title, int index, bool need) {
+      IconData icon, String title, int index) {
     return BottomNavigationBarItem(
-        icon: need && shoppingCartState.total != 0
-            ? Stack(
-                children: [
-                  Icon(icon),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                      decoration: BoxDecoration(
-                        color: Color(0xffFFEB3B),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        shoppingCartState.total.toString(), // 未读数量
-                        style: TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : Icon(icon),
+        icon: Icon(icon),
         label: title);
   }
 }

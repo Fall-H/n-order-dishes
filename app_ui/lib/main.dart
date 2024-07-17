@@ -1,6 +1,7 @@
 import 'package:app_ui/page/homePage.dart';
 import 'package:app_ui/page/profilePage.dart';
 import 'package:app_ui/page/shoppingCartPage.dart';
+import 'package:app_ui/state/stateStream.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,10 +33,13 @@ class _MainPageState extends State<MainPage> {
     const ProfilePage()
   ];
 
-  int selectedIndex = 0;
+  int selectedIndex = 1;
 
   void _onItemTapped(int index) {
     setState(() {
+      if (index != 0) {
+        StateStream().getShoppingCartStream().close();
+      }
       selectedIndex = index;
     });
   }

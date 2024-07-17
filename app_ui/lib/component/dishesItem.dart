@@ -1,28 +1,24 @@
+import 'package:app_ui/state/dishesItemState.dart';
 import 'package:flutter/material.dart';
 
+import '../model/dishes.dart';
 import '../state/dishesTypeItemState.dart';
 import '../state/stateStream.dart';
 
 class DishesItem extends StatefulWidget {
-  String title;
-  String image;
-  int id;
+  Dishes dishes;
 
-  DishesItem(
-      {super.key, required this.title, required this.id, required this.image});
+  DishesItem({super.key, required this.dishes});
 
   @override
-  State<DishesItem> createState() =>
-      _DishesItemState(this.title, this.id, this.image);
+  State<DishesItem> createState() => _DishesItemState(this.dishes);
 }
 
 class _DishesItemState extends State<DishesItem> {
+  DishesItemState dishesItemState = DishesItemState();
+  Dishes dishes;
 
-  String title;
-  String image;
-  int id;
-
-  _DishesItemState(this.title, this.id, this.image);
+  _DishesItemState(this.dishes);
 
   @override
   Widget build(BuildContext context) {
@@ -44,41 +40,91 @@ class _DishesItemState extends State<DishesItem> {
           bottom: 5.0,
           left: 5.0,
         ),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Image.network(width: 100.0, height: 100.0, fit: BoxFit.cover, image,
-                errorBuilder: (BuildContext context, Object exception,
-                    StackTrace? stackTrace) {
-              return Icon(Icons.error);
-            }),
-            Align(
-              alignment: Alignment.topCenter,
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          _createImage(),
+          Expanded(
+              flex: 1,
               child: Container(
-                  margin: const EdgeInsets.only(
-                    left: 10.0,
-                  ),
-                  child: Text(title,
-                      style: const TextStyle(
-                          color: Color(0xFF424242), fontSize: 24))),
-            )
-          ]),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: InkWell(
-                onTap: () {
-                  StateStream().shoppingCartCount++;
-                  StateStream().getShoppingCartStream().sink.add(StateStream().shoppingCartCount);
-                },
-                child: Container(
-                    width: 30.0,
-                    height: 30.0,
-                    decoration: BoxDecoration(
-                      color: Color(0xffffeb3b),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Icon(Icons.add, color: Color(0xff795548), size: 15)),
-              )),
+                  height: 100,
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(dishes.title,
+                          style: const TextStyle(
+                              color: Color(0xFF424242), fontSize: 24)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _createOptionButton(Icons.remove_outlined,
+                              dishesItemState.get(dishes) ?? 0, true),
+                          Text(dishesItemState.get(dishes) == 0
+                              ? ''
+                              : dishesItemState.get(dishes).toString()),
+                          _createOptionButton(Icons.add,
+                              dishesItemState.get(dishes) ?? 0, false)
+                        ],
+                      )
+                    ],
+                  )))
         ]));
+  }
+
+  Image _createImage() {
+    return Image.network(
+        width: 100.0,
+        height: 100.0,
+        fit: BoxFit.cover,
+        dishes.image, errorBuilder:
+            (BuildContext context, Object exception, StackTrace? stackTrace) {
+      return Icon(Icons.error);
+    });
+  }
+
+  Widget _createOptionButton(IconData icon, int count, bool isShow) {
+    return count == 0 && isShow
+        ? Container(
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            width: 20.0,
+            height: 20.0)
+        : Container(
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: InkWell(
+                  onTap: () {
+                    if (!isShow) {
+                      setState(() {
+                        dishesItemState.add(dishes);
+                      });
+
+                      StateStream()
+                          .getShoppingCartStream()
+                          .sink
+                          .add(dishesItemState.getTotal());
+                    } else {
+                      if (dishesItemState.get(dishes) == 0) {
+                        return;
+                      }
+
+                      setState(() {
+                        dishesItemState.reduction(dishes);
+                      });
+
+                      StateStream()
+                          .getShoppingCartStream()
+                          .sink
+                          .add(dishesItemState.getTotal());
+                    }
+                  },
+                  child: Container(
+                      width: 20.0,
+                      height: 20.0,
+                      decoration: BoxDecoration(
+                        color: Color(0xffffeb3b),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Icon(icon, color: Color(0xff795548), size: 15)),
+                )));
   }
 }

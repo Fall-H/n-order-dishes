@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:app_ui/page/shoppingCartPage.dart';
+import 'package:app_ui/state/dishesItemState.dart';
 import 'package:app_ui/state/stateStream.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DishesTypeItemState dishesTypeItemState = DishesTypeItemState();
+  DishesItemState dishesItemState = DishesItemState();
 
   int selectedIndex = 1;
 
@@ -30,45 +34,60 @@ class _HomePageState extends State<HomePage> {
   List<Dishes> dishes = [
     Dishes(
         id: 0,
-        title: "番茄炒鸡蛋",
+        title: "番茄炒鸡蛋1",
         image:
             "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
     Dishes(
         id: 0,
-        title: "番茄炒鸡蛋",
+        title: "番茄炒鸡蛋2",
         image:
             "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
     Dishes(
         id: 0,
-        title: "番茄炒鸡蛋",
+        title: "番茄炒鸡蛋3",
         image:
             "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
     Dishes(
         id: 0,
-        title: "番茄炒鸡蛋",
+        title: "番茄炒鸡蛋4",
         image:
             "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
     Dishes(
         id: 0,
-        title: "番茄炒鸡蛋",
+        title: "番茄炒鸡蛋5",
         image:
             "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
     Dishes(
         id: 0,
-        title: "番茄炒鸡蛋",
+        title: "番茄炒鸡蛋6",
         image:
             "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
     Dishes(
         id: 0,
-        title: "番茄炒鸡蛋",
+        title: "番茄炒鸡蛋7",
         image:
             "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
     Dishes(
         id: 0,
-        title: "番茄炒鸡蛋",
+        title: "番茄炒鸡蛋8",
         image:
             "https://th.bing.com/th?id=OIP.gLSfHP-70_4_AT6hRrYzzAHaGK&w=273&h=228&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    StateStream().setShoppingCartStream(StreamController<int>());
+    dishesItemState.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // dishesItemState.dispose();
+  }
 
   void selectedIndexFunction(int index) {
     setState(() {
@@ -122,10 +141,7 @@ class _HomePageState extends State<HomePage> {
                   child: ListView.builder(
                       itemCount: dishes.length,
                       itemBuilder: (context, index) {
-                        return DishesItem(
-                            title: dishes[index].title,
-                            id: dishes[index].id,
-                            image: dishes[index].image);
+                        return DishesItem(dishes: dishes[index]);
                       })),
             ),
           ],
@@ -139,21 +155,23 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         FloatingActionButton(
           mini: true,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ShoppingCartPage()));
+          },
           child: Icon(Icons.shopping_cart),
-          backgroundColor: Color(0xffFFEB3B), // 选择一个醒目的颜色
+          backgroundColor: Color(0xffFFEB3B),
         ),
         Positioned(
           right: 0.0,
           top: 0.0,
-          child: buildBadge(), // 假设标记数字为5
+          child: buildBadge(),
         )
       ],
     );
   }
 
   Widget buildBadge() {
-    // 使用Container创建一个圆形的标记，显示数字
     return Container(
         padding: EdgeInsets.all(2),
         decoration: BoxDecoration(
@@ -161,8 +179,8 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(4),
         ),
         child: StreamBuilder(
-          stream: StateStream().shoppingCartStream.stream,
-          initialData: StateStream().shoppingCartCount,
+          stream: StateStream().getShoppingCartStream().stream,
+          initialData: DishesItemState().getTotal(),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             return Text(
               snapshot.data.toString(),

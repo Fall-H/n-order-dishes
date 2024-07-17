@@ -13,10 +13,13 @@ class StateStream {
     return _instance;
   }
 
-  int shoppingCartCount = 0;
-  final StreamController<int> shoppingCartStream = StreamController<int>();
+  StreamController<int> _shoppingCartStream = StreamController<int>();
+
+  void setShoppingCartStream(StreamController<int> stream) {
+    _shoppingCartStream = stream;
+  }
 
   StreamController<int> getShoppingCartStream() {
-    return shoppingCartStream;
+    return _shoppingCartStream;
   }
 }

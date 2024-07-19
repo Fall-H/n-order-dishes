@@ -45,11 +45,56 @@ class _GroupPageState extends State<GroupPage> {
             margin: EdgeInsets.all(20),
             child: Row(children: [
               Text('已加入分组：${group.name}'),
-              TextButton(onPressed: () {
-
-              }, child: Text('设置分组'))
+              TextButton(
+                  onPressed: () {
+                    showCustomDialog();
+                  },
+                  child: Text('设置分组'))
             ]),
           )),
+    );
+  }
+
+  void showCustomDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('输入分组'),
+          content: TextFormField(
+            decoration: InputDecoration(
+              labelText: '分组编码',
+              border: OutlineInputBorder(),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return '请输入分组编码';
+              }
+              return null;
+            },
+            onSaved: (value) {
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('取消'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('提交'),
+              onPressed: () {
+                final form =
+                    ModalRoute.of(context)?.settings.arguments as FormState;
+                if (form == null) return;
+                form.save();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

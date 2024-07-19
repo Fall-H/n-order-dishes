@@ -3,8 +3,8 @@ package interceptor
 import (
 	"context"
 	"github.com/gin-gonic/gin"
-	"org.nod/app/models"
-	global "org.nod/global"
+	"org.nod/global"
+	"org.nod/models"
 )
 
 func HttpInterceptor() gin.HandlerFunc {

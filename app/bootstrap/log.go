@@ -3,7 +3,6 @@ package bootstrap
 import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"org.nod/global"
 	"org.nod/utils"
 	"os"

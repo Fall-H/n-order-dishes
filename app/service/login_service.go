@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
-	"org.nod/app/models"
 	"org.nod/global"
+	"org.nod/models"
 	"strings"
 )
 
@@ -37,7 +37,7 @@ func Login(c *gin.Context) {
 	}
 
 	token = strings.ReplaceAll(uuid.NewV1().String(), "-", "")
-	global.App.Redis.Set(context.Background(), "nod:user:"+token, strings(user.UserID), 60*60*24)
+	global.App.Redis.Set(context.Background(), "nod:user:"+token, user.UserID, 60*60*24)
 
 	result.Success(gin.H{"token": token})
 	return

@@ -13,5 +13,8 @@ func LoadRoute(engine *gin.Engine) {
 		router.POST("/login", service.Login)
 
 		router.Use(interceptor.HttpInterceptor())
+
+		router.GET("/dishes/all", service.SelectAllDishes)
+		router.GET("/dishes/type/all", service.SelectAllDishesType)
 	}
 }

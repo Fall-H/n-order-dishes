@@ -22,3 +22,25 @@ type User struct {
 	Timestamps
 	SoftDeletes
 }
+
+type Dishes struct {
+	DishesID     uint   `json:"dishes_id" gorm:"primaryKey"`
+	DishesTypeID uint   `json:"dishes_type_id" gorm:"index"`
+	GroupID      uint   `json:"group_id" gorm:"index"`
+	Name         string `json:"name"`
+	Timestamps
+	SoftDeletes
+}
+
+type DishesType struct {
+	DishesTypeID uint   `json:"dishes_id" gorm:"primaryKey"`
+	GroupID      uint   `json:"group_id" gorm:"index"`
+	Name         string `json:"name"`
+	Timestamps
+	SoftDeletes
+}
+
+type Page struct {
+	List []interface{} `json:"list"`
+	Size int64         `json:"size"`
+}

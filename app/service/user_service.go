@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"org.nod/global"
@@ -28,7 +29,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	global.App.DB.Select("user_id").Table("t_user").Where("username = ? and password = ?",
+	global.App.DB.Select("user_id, group_id").Table("t_user").Where("username = ? and password = ?",
 		user.Username, user.Password).First(&user)
 
 	if 0 == user.UserID {
@@ -37,7 +38,8 @@ func Login(c *gin.Context) {
 	}
 
 	token = strings.ReplaceAll(uuid.NewV1().String(), "-", "")
-	global.App.Redis.Set(context.Background(), "nod:user:"+token, user.UserID, 60*60*24)
+	var value = fmt.Sprintf(`{"userId": %d, "groupId": %d}`, user.UserID, user.GroupID)
+	global.App.Redis.Set(context.Background(), "nod:user:"+token, value, 86400000000000)
 
 	result.Success(gin.H{"token": token})
 	return

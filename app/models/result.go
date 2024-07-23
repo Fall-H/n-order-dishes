@@ -10,7 +10,7 @@ type Result struct {
 }
 
 type RestResult struct {
-	Code int         `json:"code"`
+	Code string      `json:"code"`
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }
@@ -24,13 +24,13 @@ func (r *Result) Success(data interface{}) {
 		data = gin.H{}
 	}
 	res := RestResult{}
-	res.Code = 0
+	res.Code = "0"
 	res.Msg = ""
 	res.Data = data
 	r.Ctx.JSON(http.StatusOK, res)
 }
 
-func (r *Result) Error(code int, msg string) {
+func (r *Result) Error(code string, msg string) {
 	res := RestResult{}
 	res.Code = code
 	res.Msg = msg

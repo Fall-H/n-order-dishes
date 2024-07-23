@@ -25,7 +25,7 @@ func Login(c *gin.Context) {
 	var user *models.User
 	if err := c.ShouldBind(&user); err != nil {
 		panic(err)
-		result.Error(400, "服务器错误")
+		result.Error("400", "服务器错误")
 		return
 	}
 
@@ -33,7 +33,7 @@ func Login(c *gin.Context) {
 		user.Username, user.Password).First(&user)
 
 	if 0 == user.UserID {
-		result.Error(400, "账号或密码错误")
+		result.Error("400", "账号或密码错误")
 		return
 	}
 

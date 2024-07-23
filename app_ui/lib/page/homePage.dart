@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:app_ui/api/dishesTypeApi.dart';
+import 'package:app_ui/api/userApi.dart';
 import 'package:app_ui/page/shoppingCartPage.dart';
 import 'package:app_ui/state/dishesItemState.dart';
 import 'package:app_ui/state/stateStream.dart';
+import 'package:cry/model/response_body_api.dart';
 import 'package:flutter/material.dart';
 
 import '../component/dishesItem.dart';
@@ -77,10 +80,17 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _loadData();
     StateStream().setShoppingCartStream(StreamController<int>());
     dishesItemState.addListener(() {
       setState(() {});
     });
+  }
+
+  _loadData() async {
+    ResponseBodyApi responseBodyApi = await DishesTypeApi().all("", 10, 0);
+    var data = responseBodyApi.data;
+    if (mounted) this.setState(() {});
   }
 
   @override

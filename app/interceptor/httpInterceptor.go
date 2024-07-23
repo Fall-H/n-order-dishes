@@ -16,14 +16,14 @@ func HttpInterceptor() gin.HandlerFunc {
 		userDataStr, err := global.App.Redis.Get(context.Background(), "nod:user:"+authorization).Result()
 
 		if authorization == "" || err != nil {
-			result.Error(400, "token失效")
+			result.Error("400", "token失效")
 			c.Abort()
 		} else {
 			userDataMap := make(map[string]uint)
 			err := json.Unmarshal([]byte(userDataStr), &userDataMap)
 
 			if err != nil {
-				result.Error(400, "用户信息不完整")
+				result.Error("400", "用户信息不完整")
 				c.Abort()
 				return
 			}
